@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <functional>
 #include <string>
 #include <vector>
@@ -61,23 +62,31 @@ private:
 };
 
 Predicate min_severity(Severity severity) {
-    // implement me using lambda
-    return {};
+    // If instead we used 
+    //      return [&](const LogMessage& msg){ return msg.severity == severity;};
+    // It is possible severity would be out-of-scope
+    // The lambda function needs to copy severity as a local variable of the predicate function
+    return [severity](const LogMessage& msg){ return msg.severity == severity;};
 }
 
 Predicate from_subsystem(std::string subsystem) {
-    // implement me using lambda
-    return {};
+    return [subsystem](const LogMessage& msg){ return msg.subsystem == subsystem;};
 }
 
 Predicate text_contains(std::string needle) {
-    // implement me using lambda
-    return {};
+    return [needle](const LogMessage& msg){ return msg.text.find(needle) != std::string::npos;};
 }
 
 Predicate all_of(std::vector<Predicate> predicates) {
-    // implement me using lambda
-    return {};
+    return [predicates](const LogMessage& msg){
+        return std::all_of(
+            predicates.begin(), 
+            predicates.end(), 
+            [&](const Predicate& p) {
+                return p(msg);
+            }
+        );
+    };
 }
 
 Predicate any_of(std::vector<Predicate> predicates) {
