@@ -7,6 +7,10 @@
 
 /*
 std::list() as a linked-list in Modern C++
+The std::list::splice member function in C++ transfers nodes from one std::list to another (or within the same list) 
+by rearranging the internal pointers of the linked list. This is a highly efficient operation because no elements 
+are copied or moved in memory, and existing iterators or references to the elements remain valid.
+
 dest.splice(pos, source);              // move all nodes
 dest.splice(pos, source, it);          // move one node
 dest.splice(pos, source, first, last); // move range [first, last)
